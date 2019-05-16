@@ -1,20 +1,40 @@
+import re
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+
+
 def removeDuplicateLabels(labels):
-    for i, k in enumerate(labels):
-        if k == "ARTS" or k == "CULTURE & ARTS":
-            labels[i] = "ARTS & CULTURE"
-        elif k == "STYLE":
-            labels[i] = "STYLE & BEAUTY"
-        elif k == "WELLNESS" or k == "HEALTHY LIVING":
-            labels[i] = "HOME & LIVING"
-        elif k == "PARENTS":
-            labels[i] = "PARENTING"
-        elif k == "WORLDPOST":
-            labels[i] = "WORLD NEWS"
-        elif k == "COLLEGE":
-            labels[i] = "EDUCATION"
-        elif k == "TASTE":
-            labels[i] = "FOOD & DRINK"
-        elif k == "GREEN":
-            labels[i] = "ENVIRONMENT"
-    
+    """
+    Remove duplicate labels
+    """
+    labels.replace(["ARTS", "CULTURE & ARTS"], "ARTS & CULTURE", inplace=True)
+    labels.replace("STYLE", "STYLE & BEAUTY", inplace=True)
+    labels.replace(["WELLNESS", "HEALTHY LIVING"],
+                   "HOME & LIVING", inplace=True)
+    labels.replace("PARENTS", "PARENTING", inplace=True)
+    labels.replace("WORLDPOST", "WORLD NEWS", inplace=True)
+    labels.replace("COLLEGE", "EDUCATION", inplace=True)
+    labels.replace("TASTE", "FOOD & DRINK", inplace=True)
+    labels.replace("GREEN", "ENVIRONMENT", inplace=True)
+    # labels.replace("MONEY", "BUSINESS", inplace=True)
+    labels.replace("COMEDY", "ENTERTAINMENT", inplace=True)
+    # labels.replace("IMPACT", "GOOD NEWS", inplace=True)
+    # labels.replace(["BLACK VOICES", "LATINO VOICES", "QUEER VOICES"], "VOICES", inplace=True)
+
     return labels
+
+
+def cleanText(data):
+    """
+    Clean Text
+    - Keep only letters
+    - Remove stopwords
+    - Stem words
+    """
+    lemmatizer = WordNetLemmatizer()
+    text = re.sub('[^a-zA-Z]', ' ', data)
+    words = nltk.word_tokenize(text.lower())
+    stops = set(stopwords.words('english'))
+    lem_words = [lemmatizer.lemmatize(w) for w in words if w not in stops]
+    return ' '.join(lem_words)
