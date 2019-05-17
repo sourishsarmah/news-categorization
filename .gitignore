@@ -8,3 +8,6 @@ __pycache__/
 
 # Dataset
 news_data.csv
+
+# Problem Statement
+problem_statement.txt
